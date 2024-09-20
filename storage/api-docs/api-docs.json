@@ -1,0 +1,876 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "BIBLIOTECA API",
+        "description": "API documentation for the Biblioteca APP",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000/api",
+            "description": "Development server"
+        }
+    ],
+    "paths": {
+        "/auth/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "operationId": "5dbcfe52b09670c41b9820b3f8dd1150",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "william@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "Password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Token returned",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "tokenHere"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Invalid credentials",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "El Email o password son incorrectos"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/me": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Get the current user's details",
+                "operationId": "0b0d032633316b3aea44a7f95b597a7e",
+                "responses": {
+                    "200": {
+                        "description": "Returns user details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "description": "The user ID",
+                                            "type": "integer"
+                                        },
+                                        "email": {
+                                            "description": "The email address of the user",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized, invalid credentials",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "unauthorized."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/books/count": {
+            "get": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Get the total count of books",
+                "operationId": "d460939a3ad1e4b393f793c831ceec8f",
+                "responses": {
+                    "200": {
+                        "description": "Returns the total count of books",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "count": {
+                                            "type": "integer",
+                                            "example": 150
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to retrieve book count",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Failed to retrieve book count"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/books/random/{count}": {
+            "get": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Get a random set of books",
+                "operationId": "7b19b791b43fb875658d76bab2dbe52e",
+                "parameters": [
+                    {
+                        "name": "count",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns a random set of books",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Book"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to retrieve books",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Failed to retrieve books"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/books/location": {
+            "get": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Get books by location",
+                "operationId": "c772d8f22c5799cb30b3aa15e91ddd98",
+                "responses": {
+                    "200": {
+                        "description": "Returns books by location",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Location"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to retrieve location books",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Failed to retrieve location books"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/books/{sortBy}": {
+            "get": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Get all books sorted by a specific field",
+                "operationId": "3f93861d3423426ab5b35fe6d0ed6e98",
+                "parameters": [
+                    {
+                        "name": "sortBy",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns all books sorted by the specified field",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Book"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to retrieve books",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Failed to retrieve books"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/books/search/{keyword}": {
+            "get": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Search books by keyword",
+                "operationId": "9300c112601119a8fbfb30c6b7325d24",
+                "parameters": [
+                    {
+                        "name": "keyword",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns a list of books that match the keyword",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Book"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to search books",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Failed to search books"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/books/isbn/{isbn}": {
+            "get": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Get a book by ISBN",
+                "operationId": "f4a437fee65720df682b024f03e33ee7",
+                "parameters": [
+                    {
+                        "name": "isbn",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns the book details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Book"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Book not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Libro no encontrado."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to retrieve book",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Failed to retrieve book."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/books": {
+            "post": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Add a new book",
+                "operationId": "c66aacc5b7c326ae6e98cb119afc092f",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "isbn",
+                                    "title"
+                                ],
+                                "properties": {
+                                    "isbn": {
+                                        "type": "string",
+                                        "example": "9780307474728"
+                                    },
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Cien años de soledad"
+                                    },
+                                    "author": {
+                                        "type": "string",
+                                        "example": "Gabriel García Márquez"
+                                    },
+                                    "publisher": {
+                                        "type": "string",
+                                        "example": "Editorial Sudamericana"
+                                    },
+                                    "publication_year": {
+                                        "type": "string",
+                                        "example": "1967"
+                                    },
+                                    "location": {
+                                        "type": "string",
+                                        "example": "A-V10"
+                                    },
+                                    "cover": {
+                                        "description": "Cover image file",
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Book added successfully",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "Libro almacenado correctamente"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Invalid input or duplicate data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "El libro con ese ISBN ya existe"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to add book",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Failed to add book"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/books/{isbn}": {
+            "post": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "[ PUT ] - Update a book by ISBN using POST (PUT override)",
+                "description": "This endpoint allows updating a book using a POST request with a PUT method override. This is useful in environments where PUT requests are not allowed.",
+                "operationId": "fe8d860d5a3d971e3e6c22cfd779d675",
+                "parameters": [
+                    {
+                        "name": "isbn",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "isbn",
+                                    "title"
+                                ],
+                                "properties": {
+                                    "_method": {
+                                        "description": "Method override for PUT request",
+                                        "type": "string",
+                                        "enum": [
+                                            "PUT"
+                                        ],
+                                        "example": "PUT"
+                                    },
+                                    "isbn": {
+                                        "type": "string",
+                                        "example": "9780307474728"
+                                    },
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Cien años de soledad"
+                                    },
+                                    "author": {
+                                        "type": "string",
+                                        "example": "Gabriel García Márquez"
+                                    },
+                                    "publisher": {
+                                        "type": "string",
+                                        "example": "Editorial Sudamericana"
+                                    },
+                                    "publication_year": {
+                                        "type": "string",
+                                        "example": "1967"
+                                    },
+                                    "location": {
+                                        "type": "string",
+                                        "example": "A-V10"
+                                    },
+                                    "cover": {
+                                        "description": "Cover image file",
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Book updated successfully",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "Libro actualizado correctamente"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Book not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Libro no encontrado"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Invalid input or duplicate data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "El libro con ese ISBN ya existe"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to update book",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Failed to update book"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Delete a book by ISBN",
+                "operationId": "396ae21694a0b84215dc525e80b9370e",
+                "parameters": [
+                    {
+                        "name": "isbn",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Book deleted successfully",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "Libro eliminado correctamente"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Book not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Libro no encontrado"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to delete book",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Failed to delete book"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Book": {
+                "description": "Book schema",
+                "properties": {
+                    "id": {
+                        "description": "The book ID",
+                        "type": "integer",
+                        "example": 207
+                    },
+                    "isbn": {
+                        "description": "The book ISBN",
+                        "type": "integer",
+                        "example": 9505043651
+                    },
+                    "title": {
+                        "description": "The title of the book",
+                        "type": "string",
+                        "example": "APICULTURA PRÁCTICA"
+                    },
+                    "author": {
+                        "description": "The author of the book",
+                        "type": "string",
+                        "example": "ALDO L. PERSANO"
+                    },
+                    "publisher": {
+                        "description": "The publisher of the book",
+                        "type": "string",
+                        "example": "HEMISFERIO SUR"
+                    },
+                    "publication_year": {
+                        "description": "The year the book was published",
+                        "type": "string",
+                        "example": "1992"
+                    },
+                    "location": {
+                        "description": "The location of the book in the library",
+                        "type": "string",
+                        "example": "E-G06"
+                    }
+                },
+                "type": "object"
+            },
+            "Location": {
+                "description": "Shelf and book location schema",
+                "properties": {
+                    "shelf": {
+                        "description": "Shelf identifier",
+                        "type": "string",
+                        "example": "E"
+                    },
+                    "sections": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "section": {
+                                    "description": "Section identifier",
+                                    "type": "string",
+                                    "example": "G"
+                                },
+                                "books": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Book"
+                                    }
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "BearerAuth": {
+                "type": "http",
+                "description": "Please provide your token in the following format: Bearer <token>.",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Auth",
+            "description": "Endpoints for user authentication"
+        },
+        {
+            "name": "Books",
+            "description": "Endpoints for managing books in the library."
+        }
+    ]
+}
