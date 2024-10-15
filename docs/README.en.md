@@ -1,4 +1,10 @@
 # BIBLIOTECA Backend
+![Framework](https://img.shields.io/badge/Framework-Laravel%2011-red)
+![Version](https://img.shields.io/badge/version-1.0.0-green)
+![Database](https://img.shields.io/badge/Database-MySQL-orange)
+![Language](https://img.shields.io/badge/Language-PHP%208-blue)
+![API Documentation](https://img.shields.io/badge/API%20Docs-Swagger-green)
+
 
 The backend of **BIBLIOTECA** is a RESTful API management system designed for a personal library. It provides key functionalities for user authentication and book management, including secure login, collection management, and cover image uploads. Built with Laravel and MySQL, this system facilitates the organization and control of books in a private library.
 
